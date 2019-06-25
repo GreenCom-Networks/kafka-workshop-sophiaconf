@@ -1,4 +1,7 @@
+import sys
 from kafka import KafkaConsumer
+
+client_id = "kafka-python-{}".format(sys.argv[1] if len(sys.argv) > 1 else "clientA" )
 
 consumer = KafkaConsumer(
     "sophia-conf-2019.python.tmp",
@@ -6,17 +9,12 @@ consumer = KafkaConsumer(
     security_protocol="SSL",
     ssl_cafile="cert/ca.pem",
     ssl_certfile="cert/service.cert",
-    ssl_keyfile="cert/service.key"    
+    ssl_keyfile="cert/service.key",
+    client_id=client_id
 )
 
-# Call poll twice. First call will just assign partitions for our
-# consumer without actually returning anything
+print("starting '{}' client...".format(client_id))
 
-#for _ in range(2):
-#    raw_msgs = consumer.poll(timeout_ms=1000)
-#    for tp, msgs in raw_msgs.items():
-#        for msg in msgs:
-#            print("Received: {}".format(msg.value))
 
 for msg in consumer:
     print(msg)

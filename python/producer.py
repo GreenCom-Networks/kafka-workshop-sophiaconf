@@ -5,9 +5,8 @@ producer = KafkaProducer(
     security_protocol="SSL",
     ssl_cafile="cert/ca.pem",
     ssl_certfile="cert/service.cert",
-    ssl_keyfile="cert/service.key"
+    ssl_keyfile="cert/service.key",
 )
-
 
 topic = "sophia-conf-2019.python.tmp"
 
