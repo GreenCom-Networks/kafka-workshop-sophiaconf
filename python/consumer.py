@@ -1,20 +1,50 @@
 import sys
-from kafka import KafkaConsumer
+import signal
 
-client_id = "kafka-python-{}".format(sys.argv[1] if len(sys.argv) > 1 else "clientA" )
+from kafka import KafkaConsumer
+from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
+from kafka.coordinator.assignors.range import RangePartitionAssignor
+
+usage="""\
+USAGE:
+python {} CLIENT_ID TOPIC [GROUP_ID]
+CLIENT_ID and TOPIC are mandatory\
+""".format(__file__)
+
+if len(sys.argv) <= 2:
+    print(usage)
+    exit(-1)
+
+# Retrieving client's name, topic and group_id through argv
+client_id = sys.argv[1]
+topic = sys.argv[2]
+group_id = sys.argv[3] if len(sys.argv) > 3 else None
+
+roundRobinPartitionAssignor = RoundRobinPartitionAssignor()
+rangePartitionAssignor = RangePartitionAssignor()
 
 consumer = KafkaConsumer(
-    "sophia-conf-2019.python.tmp",
+    topic,
     bootstrap_servers="kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217",
+    #partition_assignment_strategy=[rangePartitionAssignor],
     security_protocol="SSL",
     ssl_cafile="cert/ca.pem",
     ssl_certfile="cert/service.cert",
     ssl_keyfile="cert/service.key",
-    client_id=client_id
+    client_id=client_id,
+    group_id=group_id
 )
 
-print("starting '{}' client...".format(client_id))
+print("starting client '{}' on topic '{}' with group_id '{}'.".format(client_id, topic, group_id))
 
+def exit_gracefully(a,b):
+    consumer.unsubscribe()
+    consumer.close()
+    exit(0)
 
+signal.signal(signal.SIGINT, exit_gracefully)
+signal.signal(signal.SIGTERM, exit_gracefully)
+
+print("Waiting messages...")
 for msg in consumer:
     print(msg)
