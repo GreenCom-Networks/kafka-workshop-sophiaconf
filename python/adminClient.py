@@ -1,17 +1,19 @@
 from kafka.admin import KafkaAdminClient, NewTopic
 
+from config import bootstrap_servers, ssl_cafile, ssl_certfile, ssl_keyfile
+
 adminClient = KafkaAdminClient(
-    bootstrap_servers="kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217",
+    bootstrap_servers=bootstrap_servers,
     security_protocol="SSL",
-    ssl_cafile="cert/ca.pem",
-    ssl_certfile="cert/service.cert",
-    ssl_keyfile="cert/service.key"
+    ssl_cafile=ssl_cafile,
+    ssl_certfile=ssl_certfile,
+    ssl_keyfile=ssl_keyfile
 )
 
 def createTopic():
     try:
         topic = str(input("Please enter a topic name:")).strip()
-        topic_partitions = int(input("Please enter a number of partition:"))
+        topic_partitions = int(input("Please enter a number of partition [1]:") or 1)
         if str(input("Confirm the creation of topic '{}' with {} partitions? [Y/N]".format(topic,topic_partitions))) == 'Y':
             print("Creating topic {}...".format(topic))
             newTopic_list = [NewTopic(name=topic,num_partitions=topic_partitions, replication_factor=1)]
@@ -46,18 +48,18 @@ def exit_gracefully():
     adminClient.close()
     exit(0)
 
-menu = [{'title':"0 : exit", 'function':exit_gracefully},
-        {'title':"1 : create a topic", 'function':createTopic},
-        {'title':"2 : delete some topics", 'function':deleteTopic},
-        {'title':"3 : describe consumer groups", 'function':describeConsumerGroup},
+menu = [{'title':"0 : exit", 'method':exit_gracefully},
+        {'title':"1 : create a topic", 'method':createTopic},
+        {'title':"2 : delete some topics", 'method':deleteTopic},
+        {'title':"3 : describe consumer groups", 'method':describeConsumerGroup},
         ]
 
 
 while True:
     print('\n'.join(map(lambda x : x['title'], menu)))
     try:
-        option = int(input("Please enter an option:"))
-        menu[option]['function']()
+        option = int(input("Please enter an option:") or 0)
+        menu[option if option < len(menu) else 0]['method']()
     except Exception as e:
         print(e)
         exit(-1)

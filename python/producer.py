@@ -1,6 +1,8 @@
 import sys
 from kafka import KafkaProducer
 
+from config import bootstrap_servers, ssl_cafile, ssl_certfile, ssl_keyfile
+
 usage="""\
 USAGE:
 python {} TOPIC
@@ -13,14 +15,14 @@ if len(sys.argv) <= 1:
 
 topic = sys.argv[1]
 
-print("Starting producer to topic: '{}'".format(topic))
+print("Starting producer on topic: '{}'".format(topic))
 
 producer = KafkaProducer(
     bootstrap_servers="kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217",
     security_protocol="SSL",
-    ssl_cafile="cert/ca.pem",
-    ssl_certfile="cert/service.cert",
-    ssl_keyfile="cert/service.key",
+    ssl_cafile=ssl_cafile,
+    ssl_certfile=ssl_certfile,
+    ssl_keyfile=ssl_keyfile,
 )
 
 for i in range(10):
