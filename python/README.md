@@ -15,8 +15,8 @@ pip install kafka-python
 ## Running
 
 ### Scenario 1: single topic, no partitioned
-First of all, we have to create a topic where we'll push data.
-Under the ```kafka-workshop-sophiaconf/python/``` directory, launch the Admin client script and follow instructions to create a topic named *sophia-conf-2019.python* whith only 1 partition. 
+First of all, we have to create a topic on where we'll push data.
+Under the ```kafka-workshop-sophiaconf/python/``` directory, launch the Admin client script and follow instructions to create a topic named *sophia-conf-2019.python* whith only 1 partition.
 ```console
 python adminClient.py
 ```
@@ -61,4 +61,4 @@ python consumer.py kafka-python-client-2 sophia-conf-2019.python-2 group-A
 python producer.py sophia-conf-2019.python-2
 ```
 
-As you can see, all the messages are consumed 
+As you can see, the messages consumption is now shared between each consumer.
