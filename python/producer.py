@@ -6,7 +6,7 @@ from config import bootstrap_servers, ssl_cafile, ssl_certfile, ssl_keyfile
 usage="""\
 USAGE:
 python {} TOPIC
-TOPIC are mandatory\
+TOPIC is mandatory\
 """.format(__file__)
 
 if len(sys.argv) <= 1:
@@ -18,7 +18,7 @@ topic = sys.argv[1]
 print("Starting producer on topic: '{}'".format(topic))
 
 producer = KafkaProducer(
-    bootstrap_servers="kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217",
+    bootstrap_servers=bootstrap_servers,
     security_protocol="SSL",
     ssl_cafile=ssl_cafile,
     ssl_certfile=ssl_certfile,

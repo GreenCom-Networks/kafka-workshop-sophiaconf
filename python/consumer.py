@@ -22,13 +22,9 @@ client_id = sys.argv[1]
 topic = sys.argv[2]
 group_id = sys.argv[3] if len(sys.argv) > 3 else None
 
-#roundRobinPartitionAssignor = RoundRobinPartitionAssignor()
-#rangePartitionAssignor = RangePartitionAssignor()
-
 consumer = KafkaConsumer(
     topic,
-    bootstrap_servers="kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217",
-    #partition_assignment_strategy=[rangePartitionAssignor],
+    bootstrap_servers=bootstrap_servers,
     security_protocol="SSL",
     ssl_cafile=ssl_cafile,
     ssl_certfile=ssl_certfile,

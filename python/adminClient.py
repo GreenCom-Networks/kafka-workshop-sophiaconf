@@ -1,5 +1,6 @@
+import signal
+import pprint
 from kafka.admin import KafkaAdminClient, NewTopic
-
 from config import bootstrap_servers, ssl_cafile, ssl_certfile, ssl_keyfile
 
 adminClient = KafkaAdminClient(
@@ -36,14 +37,29 @@ def deleteTopic():
     except Exception as e:
         print(e)
 
-def describeConsumerGroup():
+def describeConsumerGroups():
     try:
         string_input = str(input("Please enter a list of group_id comma separated:"))
         group_id_list = list(map(lambda s : s.strip(), str.split(string_input, ',')))
-        print(adminClient.describe_consumer_groups(group_id_list))
+        pprint.pprint(adminClient.describe_consumer_groups(group_id_list))
     except Exception as e:
         print(e)
 
+def listConsumerGroupOffsets():
+    try:
+        string_input = str(input("Please enter a group_id:"))
+        group_id = string_input.strip()
+        pprint.pprint(adminClient.list_consumer_group_offsets(group_id))
+    except Exception as e:
+        print(e)
+    
+def listConsumerGroups():
+    try:
+        print("Listing consumer groups...")
+        pprint.pprint(adminClient.list_consumer_groups())
+    except Exception as e:
+        print(e)
+    
 def exit_gracefully():
     adminClient.close()
     exit(0)
@@ -51,8 +67,13 @@ def exit_gracefully():
 menu = [{'title':"0 : exit", 'method':exit_gracefully},
         {'title':"1 : create a topic", 'method':createTopic},
         {'title':"2 : delete some topics", 'method':deleteTopic},
-        {'title':"3 : describe consumer groups", 'method':describeConsumerGroup},
+        {'title':"3 : describe consumer groups", 'method':describeConsumerGroups},
+        {'title':"4 : list consumer group", 'method':listConsumerGroups},
+        {'title':"5 : list consumer group offsets", 'method':listConsumerGroupOffsets},
         ]
+
+signal.signal(signal.SIGINT, exit_gracefully)
+signal.signal(signal.SIGTERM, exit_gracefully)
 
 
 while True:
