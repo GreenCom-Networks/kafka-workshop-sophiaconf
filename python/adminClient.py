@@ -16,9 +16,6 @@ clusterMetadata = ClusterMetadata(
     bootstrap_servers=bootstrap_servers,
 )
 
-
-
-
 def createTopic():
     try:
         topic = str(input("Please enter a topic name:")).strip()
@@ -31,7 +28,6 @@ def createTopic():
             pass
     except Exception as e:
         print(e)
-
 
 def deleteTopic():
     try:
@@ -76,13 +72,11 @@ def describeConfig():
     except Exception as e:
         print(e)
 
-
 def describeClusterMetadata():
     pprint.pprint(clusterMetadata.brokers())
     pprint.pprint(clusterMetadata.available_partitions_for_topic('sophia-conf-2019.python.3-partition.tmp'))
     
-
-def exit_gracefully(a=None,b=None):
+def exit_gracefully(a=None, b=None):
     adminClient.close()
     exit(0)
 

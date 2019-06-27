@@ -1,5 +1,6 @@
 import sys
 import signal
+import pprint
 
 from kafka import KafkaConsumer
 from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
@@ -33,7 +34,7 @@ consumer = KafkaConsumer(
     group_id=group_id,
 )
 
-print("starting client '{}' on topic '{}' with group_id '{}'.".format(client_id, topic, group_id))
+print("Starting client '{}' on topic '{}' with group_id '{}'.".format(client_id, topic, group_id))
 
 def exit_gracefully(a,b):
     consumer.unsubscribe()
@@ -45,4 +46,6 @@ signal.signal(signal.SIGTERM, exit_gracefully)
 
 print("Waiting messages...")
 for msg in consumer:
-    print(msg)
+    print("{}\t: msg.value:'{}' \n\tfrom [topic:'{}', partition:{}, offset:{}]".format(
+        msg.timestamp, msg.value, msg.topic, msg.partition, msg.offset
+    ))
