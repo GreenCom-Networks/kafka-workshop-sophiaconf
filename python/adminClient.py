@@ -1,6 +1,7 @@
 import signal
 import pprint
-from kafka.admin import KafkaAdminClient, NewTopic
+from kafka.admin import KafkaAdminClient, NewTopic, ConfigResourceType, ConfigResource
+from kafka.cluster import ClusterMetadata
 from config import bootstrap_servers, ssl_cafile, ssl_certfile, ssl_keyfile
 
 adminClient = KafkaAdminClient(
@@ -10,6 +11,13 @@ adminClient = KafkaAdminClient(
     ssl_certfile=ssl_certfile,
     ssl_keyfile=ssl_keyfile
 )
+
+clusterMetadata = ClusterMetadata(
+    bootstrap_servers=bootstrap_servers,
+)
+
+
+
 
 def createTopic():
     try:
@@ -59,17 +67,33 @@ def listConsumerGroups():
         pprint.pprint(adminClient.list_consumer_groups())
     except Exception as e:
         print(e)
+
+def describeConfig():
+    try:
+        string_input = str(input("Please enter a topic:")).strip()
+        listOfConfigResourceObject = [ConfigResource(i, name) for i,name in zip([ConfigResourceType.TOPIC],[string_input])]
+        pprint.pprint(adminClient.describe_configs(listOfConfigResourceObject))
+    except Exception as e:
+        print(e)
+
+
+def describeClusterMetadata():
+    pprint.pprint(clusterMetadata.brokers())
+    pprint.pprint(clusterMetadata.available_partitions_for_topic('sophia-conf-2019.python.3-partition.tmp'))
     
-def exit_gracefully():
+
+def exit_gracefully(a=None,b=None):
     adminClient.close()
     exit(0)
 
-menu = [{'title':"0 : exit", 'method':exit_gracefully},
-        {'title':"1 : create a topic", 'method':createTopic},
-        {'title':"2 : delete some topics", 'method':deleteTopic},
-        {'title':"3 : describe consumer groups", 'method':describeConsumerGroups},
-        {'title':"4 : list consumer group", 'method':listConsumerGroups},
-        {'title':"5 : list consumer group offsets", 'method':listConsumerGroupOffsets},
+menu = [{'title':"{} : exit", 'method':exit_gracefully},
+        {'title':"{} : create a topic", 'method':createTopic},
+        {'title':"{} : delete some topics", 'method':deleteTopic},
+        {'title':"{} : describe consumer groups", 'method':describeConsumerGroups},
+        {'title':"{} : list consumer group", 'method':listConsumerGroups},
+        {'title':"{} : list consumer group offsets", 'method':listConsumerGroupOffsets},
+        {'title':"{} : describe config", 'method':describeConfig},
+        {'title':"{} : describe cluster metadata", 'method':describeClusterMetadata},
         ]
 
 signal.signal(signal.SIGINT, exit_gracefully)
@@ -77,7 +101,8 @@ signal.signal(signal.SIGTERM, exit_gracefully)
 
 
 while True:
-    print('\n'.join(map(lambda x : x['title'], menu)))
+    for i, m in enumerate(menu):
+        print(m['title'].format(i))
     try:
         option = int(input("Please enter an option:") or 0)
         menu[option if option < len(menu) else 0]['method']()
