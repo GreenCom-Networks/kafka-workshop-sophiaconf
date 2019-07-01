@@ -8,6 +8,10 @@ This tutorial can be followed:
 - On Docker image (recommended)
 - On your own configuration
 
+## Requirements
+The certificates used for the authentication to the clsuter are located in the `certs` folder.
+They are part of the docker image at the following path: `/kafka/certs/`.
+
 ## On Docker image
 ```ash
 docker build -t sophiaconf-python .
