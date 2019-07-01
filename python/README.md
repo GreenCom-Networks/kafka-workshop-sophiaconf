@@ -1,17 +1,22 @@
-# Python tuto for Kafka
+# Python workshop for Kafka
 
 Exposes basic usage of Kafka in Python.
 
-A dedicaced Kafka instance is reachable @ ```kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217```.
+A dedicated Kafka instance is reachable @ ```kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217```.
 
 This tutorial can be followed:
 - On Docker image (recommended)
 - On your own configuration
 
-
 ## On Docker image
-
-
+```ash
+docker build -t sophiaconf-python .
+docker run -it sophiaconf-python ash
+```
+And boom, you're in, the next steps are just to run some snippets:
+```ash
+python producer.py
+```
 
 
 ## On your own configuration
@@ -23,9 +28,8 @@ Should be installable through:
 pip install kafka-python
 ```
 
-
 ## Scenario 1: single topic, no partitioned
-First of all, we have to create a topic where pushing data.
+First of all, we have to create a topic where we'll push data.
 Under the ```kafka-workshop-sophiaconf/python/``` directory, launch the Admin client script and follow instructions to create a topic named *sophia-conf-2019.python* whith only 1 partition.
 ```console
 python adminClient.py
