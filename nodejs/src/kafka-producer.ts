@@ -2,6 +2,7 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {filter, first, map} from 'rxjs/operators';
 import {CompressionCodecs, CompressionTypes, Kafka, Producer} from 'kafkajs';
 import * as SnappyCodec from 'kafkajs-snappy';
+import * as tls from "tls";
 
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec;
 
@@ -34,8 +35,8 @@ export class KafkaProducer {
     /**
      * Promise to create a new instance of KafkaProducer
      */
-    public static createNewProducer(brokerList: string, appName: string = 'kafka'): Observable<KafkaProducer> {
-        const producer = new KafkaProducer(brokerList, appName);
+    public static createNewProducer(brokerList: string, appName: string = 'kafka', ssl?: tls.ConnectionOptions): Observable<KafkaProducer> {
+        const producer = new KafkaProducer(brokerList, appName, ssl);
         if (producer.readySubject.getValue()) {
             return of(producer);
         } else {
@@ -51,11 +52,12 @@ export class KafkaProducer {
     /**
      * Class constructor
      */
-    public constructor(private brokerList: string, private clientId: string) {
+    public constructor(private brokerList: string, private clientId: string, private ssl?: tls.ConnectionOptions) {
         console.log(`Create new producer instance for ${brokerList}`);
         this.kafka = new Kafka({
             clientId,
             brokers: brokerList.split(','),
+            ssl
         });
         this.producer = this.createProducer();
     }

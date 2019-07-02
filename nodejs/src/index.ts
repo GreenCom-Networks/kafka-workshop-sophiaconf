@@ -3,11 +3,12 @@ import {KafkaProducer} from "./kafka-producer";
 import {KafkaAdmin} from "./kafka-admin";
 import {KafkaConsumer} from "./kafka-consumer";
 import {combineLatest, from, of} from "rxjs";
+import {readFileSync} from "fs";
 
 const brokers = 'kafka-sophiaconf-2019-ubinode-7aab.aivencloud.com:21217';
 const topic = 'testcorp.sophiaconf-2019';
-const kafkaAdmin = new KafkaAdmin(brokers, 'KafkaAdminTestRunner');
 
+// Produce function
 const produce = (producer: KafkaProducer) => {
     return from(
         ['The first message',
@@ -23,15 +24,24 @@ const produce = (producer: KafkaProducer) => {
         ).subscribe()
 };
 
+// SSL configuration
+const ssl = {
+    rejectUnauthorized: true,
+    ca: [readFileSync('/certs/ca.pem', 'utf-8')],
+    cert: readFileSync('/certs/service.cert', 'utf-8'),
+    key: readFileSync('/certs/service.key', 'utf-8'),
+}
+
+const kafkaAdmin = new KafkaAdmin(brokers, 'KafkaAdminTestRunner', ssl);
 kafkaAdmin.connectAdmin()
     .pipe(
         flatMap(() => kafkaAdmin.getTopicList()),
-        flatMap(() => kafkaAdmin.disconnectAdmin()),
+        flatMap(() => kafkaAdmin.createTopic(topic)),
         flatMap(() => {
             // Create new producer
-            const producer$ = KafkaProducer.createNewProducer(brokers, 'KafkaProducerTestRunner');
+            const producer$ = KafkaProducer.createNewProducer(brokers, 'KafkaProducerTestRunner', ssl);
             // Create new consumer
-            const consumer$ = KafkaConsumer.createNewConsumer(brokers, topic, 'KafkaConsumerTestRunner', 'KafkaConsumerTestRunner');
+            const consumer$ = KafkaConsumer.createNewConsumer(brokers, topic, 'KafkaConsumerTestRunner', 'KafkaConsumerTestRunner', ssl);
             // Sync consumer and producer connection
             return combineLatest([producer$, consumer$]);
         }),
@@ -47,5 +57,7 @@ kafkaAdmin.connectAdmin()
                     flatMap(() => combineLatest([producer.disconnect(), consumer.disconnect()]))
                 );
         }),
+        flatMap(() => kafkaAdmin.deleteTopic(topic)),
+        flatMap(() => kafkaAdmin.disconnectAdmin()),
     )
     .subscribe();

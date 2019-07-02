@@ -44,5 +44,6 @@ COPY package.json .env* open-api.yml* $BUILD_LOCATION/release/
 FROM base as release
 WORKDIR $SRC_LOCATION
 COPY --from=build $BUILD_LOCATION/release $SRC_LOCATION/
+COPY certs /certs
 HEALTHCHECK --interval=12s --timeout=12s --start-period=30s CMD [ "npm", "run", "healthcheck" ]
 CMD [ "npm", "start" ]

@@ -3,6 +3,7 @@ import {filter, flatMap, map} from 'rxjs/operators';
 import {CompressionCodecs, CompressionTypes, Consumer, Kafka, KafkaMessage} from 'kafkajs';
 import {first} from 'rxjs/internal/operators/first';
 import * as SnappyCodec from 'kafkajs-snappy';
+import * as tls from "tls";
 
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec;
 
@@ -36,8 +37,8 @@ export class KafkaConsumer {
     public data$ = this.newDataSubject.asObservable();
 
 
-    public static createNewConsumer(brokers: string, topic: string, group: string, clientId?: string) {
-        const consumer = new KafkaConsumer(brokers, topic, group, clientId);
+    public static createNewConsumer(brokers: string, topic: string, group: string, clientId?: string, ssl?: tls.ConnectionOptions) {
+        const consumer = new KafkaConsumer(brokers, topic, group, clientId, ssl);
         return consumer.connect()
             .pipe(
                 flatMap(() => consumer.ready$),
@@ -51,11 +52,12 @@ export class KafkaConsumer {
     /**
      * Class constructor
      */
-    public constructor(private brokers: string, protected topic: string, private group: string, private clientId: string) {
+    public constructor(private brokers: string, protected topic: string, private group: string, private clientId: string, private ssl?: tls.ConnectionOptions) {
         console.log(`Create new KafkaConsumer instance {broker: ${brokers}}, topic: ${topic}`);
         this.kafka = new Kafka({
             clientId,
             brokers: brokers.split(','),
+            ssl
         });
     }
 

@@ -1,5 +1,6 @@
 import {Admin, Kafka, PartitionMetadata} from "kafkajs";
 import {Observable} from "rxjs";
+import * as tls from "tls";
 
 interface ITopicMetadata {
     topic: string;
@@ -19,10 +20,11 @@ export class KafkaAdmin {
      */
     private kafkaAdmin: Admin;
 
-    public constructor(private brokers: string, private clientId: string) {
+    public constructor(private brokers: string, private clientId: string, private ssl?: tls.ConnectionOptions) {
         this.kafka = new Kafka({
             clientId: clientId,
             brokers: brokers.split(','),
+            ssl
         });
         this.kafkaAdmin = this.kafka.admin();
     }
@@ -92,5 +94,43 @@ export class KafkaAdmin {
                     subscriber.complete();
                 });
         });
+    }
+
+    public createTopic(topicName: string, nbsPartitions: number = 1): Observable<void> {
+        console.log(`Create new topic '${topicName}' ...`);
+        return new Observable(subscriber => {
+            this.kafkaAdmin.createTopics({
+                topics: [{
+                    topic: topicName,
+                    numPartitions: nbsPartitions,
+                }],
+                validateOnly: false,
+                waitForLeaders: true,
+            }).then(() => {
+                console.log(`Topic '${topicName}' created`);
+                subscriber.next();
+                subscriber.complete();
+            }).catch(error => {
+                subscriber.next(error);
+                subscriber.complete();
+            })
+        });
+    }
+
+    public deleteTopic(topicName: string) {
+        console.log(`Delete topic '${topicName}' ...`);
+        return new Observable(subscriber => {
+            this.kafkaAdmin.deleteTopics({
+                topics: [topicName],
+                timeout: 15000
+            }).then(() => {
+                console.log(`Topic '${topicName}' deleted`);
+                subscriber.next();
+                subscriber.complete();
+            }).catch(error => {
+                subscriber.next(error);
+                subscriber.complete();
+            })
+        })
     }
 }
