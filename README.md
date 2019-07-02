@@ -7,6 +7,8 @@ A Kafka Cluster is available in order to simplify this workshop at the following
 
 The associated certificates (for authentication) are available in the `certs` folder.
 
+Franz Manager (see what this is below):  https://icecorp.energy-app.net/sophiaconf-franz-manager/
+
 ## Code snippets
 Code snippets to start playing around Kafka are available in this repository for various languages:
 - [java](java/README.md)
@@ -22,3 +24,10 @@ We just wanted to give you some insights and help to get started with Apache Kaf
 
 ## KSQL
 On a slightly different topic, the `ksql` folder covers different use cases and snippets for trying out the magic of sql-like life on kafka.
+
+## Franz Manager
+GreenCom implemented its own dashboard for Kafka: `Franz Manager`.
+You can find one instance on our infrastructure at the following url: https://icecorp.energy-app.net/sophiaconf-franz-manager/ .
+
+It gives you the possibility to track topics, view messages, search through them, track consumer groups... 
+Long story short, it's a lot of fun, on a fancy view.
