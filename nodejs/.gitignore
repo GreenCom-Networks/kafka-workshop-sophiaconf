@@ -1,0 +1,10 @@
+.idea
+node_modules
+.tscache
+coverage
+env.json
+.env
+dist
+coverage
+**/*.js
+**/*.d.ts
