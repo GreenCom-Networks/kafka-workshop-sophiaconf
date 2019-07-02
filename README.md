@@ -11,7 +11,7 @@ The associated certificates (for authentication) are available in the `certs` fo
 Code snippets to start playing around Kafka are available in this repository for various languages:
 - [java](java/README.md)
 - [python](python/README.md)
-- [node](node/README.md)
+- [nodejs](nodejs/README.md)
 - [console](console/README.md)
 
 These snippets each share their own `README.md` which contains various informations including help to get started with our beloved `kafka`.
@@ -21,4 +21,4 @@ Please note that these pieces of code are not equal either in usage or in implem
 We just wanted to give you some insights and help to get started with Apache Kafka, it's now up to you to make it great.
 
 ## KSQL
-On a slightly different topic, the `ksql` folder covers different use cases and snippets for trying out the magic.
+On a slightly different topic, the `ksql` folder covers different use cases and snippets for trying out the magic of sql-like life on kafka.
