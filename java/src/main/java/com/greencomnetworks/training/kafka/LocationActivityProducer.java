@@ -1,4 +1,4 @@
-package com.greencomnetworks.trainng.kafka;
+package com.greencomnetworks.training.kafka;
 
 import java.util.Properties;
 import java.util.Random;

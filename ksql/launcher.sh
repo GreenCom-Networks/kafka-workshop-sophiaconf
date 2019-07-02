@@ -17,6 +17,6 @@ docker run -d -p 127.0.0.1:8088:8088 \
 -e KSQL_SSL_KEYSTORE_LOCATION=/certs/client.keystore.p12 \
 -e KSQL_SSL_KEYSTORE_PASSWORD=secret \
 -e KSQL_SSL_KEY_PASSWORD=secret \
--v /your/path/to/kafka-workshop-sophiaconf/certs:/certs \
+-v /home/mathias/greencom/repos/kafka-workshop-sophiaconf/certs:/certs \
 confluentinc/cp-ksql-server
 

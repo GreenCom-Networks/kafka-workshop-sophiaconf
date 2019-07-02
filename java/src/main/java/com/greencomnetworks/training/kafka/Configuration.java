@@ -1,4 +1,4 @@
-package com.greencomnetworks.trainng.kafka;
+package com.greencomnetworks.training.kafka;
 
 public class Configuration {
 

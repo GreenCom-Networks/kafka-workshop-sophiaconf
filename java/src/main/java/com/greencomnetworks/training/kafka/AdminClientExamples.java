@@ -1,4 +1,4 @@
-package com.greencomnetworks.trainng.kafka;
+package com.greencomnetworks.training.kafka;
 
 import java.util.Arrays;
 import java.util.Collection;

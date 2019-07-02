@@ -1,4 +1,4 @@
-package com.greencomnetworks.trainng.kafka.misc;
+package com.greencomnetworks.training.kafka.misc;
 
 public class Location {
 

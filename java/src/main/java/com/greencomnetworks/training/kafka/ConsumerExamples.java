@@ -1,4 +1,4 @@
-package com.greencomnetworks.trainng.kafka;
+package com.greencomnetworks.training.kafka;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -8,10 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-
-import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

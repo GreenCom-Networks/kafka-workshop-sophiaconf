@@ -1,14 +1,10 @@
-package com.greencomnetworks.trainng.kafka;
+package com.greencomnetworks.training.kafka;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.admin.AdminClient;
@@ -32,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.greencomnetworks.trainng.kafka.misc.User;
+import com.greencomnetworks.training.kafka.misc.User;
 
 public class ProducerExamples {
 	private static final Logger log = LoggerFactory.getLogger(ProducerExamples.class);
